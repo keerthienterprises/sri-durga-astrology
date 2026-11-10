@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sri Durga Vastu, Astrology & Palmistry - Jathakam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;500;600;700&family=Tinos:ital,wght@0,400;0,700;1,700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  /* ---------- palette (matched to the printed green ink) ---------- */
+  :root{
+    --ink:#1f9a4d;        /* printed green text / lines            */
+    --ink-dark:#177a3d;   /* heavier headings                       */
+    --ink-light:#7fcf9f;  /* faint ellipse in the chart            */
+    --pen:#1d3a86;        /* colour of what the user types (blue pen)*/
+    --paper:#ffffff;
+    --s:1;                /* screen scale factor set by JS          */
+    --te:'Noto Sans Telugu','Gautami','Nirmala UI','Segoe UI',sans-serif;
+    --en:'Tinos','Times New Roman',Times,serif;
+    --ar:Arial,Helvetica,sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:#d9d5cc;
+    font-family:var(--te);
+    color:var(--ink);
+    padding:16px 8px 40px;
+  }
+
+  /* ---------- A4 sheet ---------- */
+  .page-wrap{
+    width:calc(210mm * var(--s));
+    height:calc(297mm * var(--s));
+    margin:0 auto 18px;
+  }
+  .sheet{
+    width:210mm;
+    height:297mm;
+    background:var(--paper);
+    border-left:0.9mm solid var(--ink);
+    box-shadow:0 2px 14px rgba(0,0,0,.28);
+    position:relative;
+    overflow:hidden;
+    transform:scale(var(--s));
+    transform-origin:top left;
+    font-size:11.5pt;
+    line-height:1.35;
+  }
+  .page1{padding:9mm 9mm 6mm 10mm;}
+  .page2{padding:8mm 7mm 6mm 7mm;}
+
+  /* ---------- generic fill‑in inputs ---------- */
+  input.fill, textarea.fill{
+    font:inherit;
+    font-family:var(--te);
+    color:var(--pen);
+    background:transparent;
+    border:0;
+    outline:0;
+    padding:0 1.5mm;
+    min-width:0;
+  }
+  input.fill{
+    border-bottom:0.5mm dotted var(--ink);
+    height:6.5mm;
+    flex:1 1 auto;
+  }
+  input.fill:focus{background:#fff7d6;}
+  textarea.fill{resize:none;display:block;width:100%;}
+  textarea.fill:focus{background:#fffbe8;}
+  .row{display:flex;align-items:flex-end;gap:1.2mm;width:100%;}
+  .row .lbl{white-space:nowrap;flex:0 0 auto;}
+
+  /* =========================================================
+     PAGE 1
+     ========================================================= */
+  .title{
+    margin:0 0 3mm;
+    font-family:var(--en);
+    font-weight:700;
+    font-size:22.5pt;
+    letter-spacing:0.1mm;
+    color:var(--ink);
+    text-align:center;
+    white-space:nowrap;
+  }
+  .header{
+    display:grid;
+    grid-template-columns:1.25fr 26mm 1fr;
+    align-items:start;
+    column-gap:4mm;
+    min-height:24mm;
+  }
+  .astro{padding-top:2.5mm;font-family:var(--ar);font-size:11pt;line-height:1.5;white-space:nowrap;}
+  .astro .name{
+    font-family:'Dancing Script','Segoe Script',cursive;
+    font-weight:700;
+    font-size:14.5pt;
+    color:var(--ink);
+    margin-left:1mm;
+  }
+  .logo{width:26mm;height:auto;display:block;margin:-1mm auto 0;}
+  .addr{
+    padding-top:1.5mm;
+    font-family:var(--ar);
+    font-size:11pt;
+    line-height:1.5;
+    color:var(--ink);
+    justify-self:start;
+    padding-left:6mm;
+    white-space:nowrap;
+  }
+  .rule{border:0;border-top:0.35mm solid var(--ink);margin:1.5mm 0 3mm;}
+
+  .ref-row{justify-content:space-between;margin-bottom:5mm;}
+  .ref-row .ref{font-family:var(--en);font-style:italic;font-weight:700;font-size:13pt;}
+  .ref-row .refin{border-bottom-color:transparent;width:45mm;}
+  .ref-row .refin:hover,.ref-row .refin:focus{border-bottom-color:var(--ink-light);}
+  .ref-row .date{font-family:var(--en);font-size:12.5pt;}
+  .ref-row .datein{width:40mm;flex:0 0 40mm;}
+
+  .dob-row .lbl{font-family:var(--en);font-size:12.5pt;}
+  .dob-row input{height:6mm;}
+  .dob-row .in1{flex:0 0 33mm;}
+  .dob-row .in2{flex:0 0 33mm;}
+  .dob-row .in3{flex:0 0 35mm;}
+  .dob-row .opt{margin-left:2mm;}
+
+  .bless{
+    display:flex;justify-content:space-between;
+    padding:0 6mm 0 12mm;
+    margin:9mm 0 7mm;
+    font-size:12pt;
+  }
+
+  .para .row{margin-bottom:5mm;font-size:11.8pt;}
+  .para input{height:6.2mm;}
+  .g1{flex:3 1 0;} .g2{flex:2 1 0;} .g3{flex:1 1 0;} .g4{flex:5 1 0;}
+
+  .mangalam{
+    text-align:center;
+    width:34mm;
+    margin:3mm 12mm 6mm auto;
+    font-size:12pt;line-height:1.45;
+  }
+  .mangalam b{display:block;font-size:13pt;letter-spacing:0.2mm;}
+
+  /* ----- Rasi / Amsa charts ----- */
+  .charts{
+    display:flex;justify-content:space-between;
+    padding:0 30mm 0 22mm;
+    margin-bottom:5mm;
+  }
+  .chart{width:50mm;height:40mm;display:block;}
+
+  .sub-head{
+    text-align:right;
+    padding-right:6mm;
+    font-size:11pt;
+    margin-bottom:1mm;
+  }
+  .birth-row{margin-bottom:9mm;font-size:12pt;}
+  .birth-row input{height:6mm;border-bottom-width:0.6mm;}
+
+  .planet-head{margin:0 0 1.5mm 2mm;font-size:12.2pt;font-weight:600;}
+  .planet-wrap{position:relative;padding-left:9mm;}
+  .planet{
+    width:100%;
+    border-collapse:collapse;
+    table-layout:fixed;
+  }
+  .planet th,.planet td{
+    border:0.45mm solid var(--ink);
+    text-align:center;
+    padding:0;
+  }
+  .planet th{height:15mm;font-weight:500;font-size:11.5pt;vertical-align:middle;}
+  .planet td{height:16mm;}
+  .planet td input{
+    width:100%;height:100%;
+    border:0;
+    text-align:center;
+    font-size:11pt;
+    padding:0 1mm;
+  }
+  .sub{
+    position:absolute;left:0;bottom:0;
+    height:16mm;
+    display:flex;flex-direction:column;justify-content:space-between;
+    font-family:var(--ar);font-size:12.5pt;line-height:1;
+    color:var(--ink);
+    padding:0.5mm 0;
+  }
+
+  /* =========================================================
+     PAGE 2
+     ========================================================= */
+  .page2{padding-bottom:12mm;}
+
+  /* three columns drawn cell-by-cell so the third column can stay open at the bottom */
+  .dasha{
+    display:grid;
+    grid-template-columns:26% 26% 48%;
+    align-items:start;
+    flex:0 0 auto;
+  }
+  .dasha .dh{
+    height:12.5mm;
+    border-top:0.45mm solid var(--ink);
+    border-bottom:0.45mm solid var(--ink);
+    border-right:0.45mm solid var(--ink);
+    font-weight:500;font-size:12pt;
+    padding:1mm 2mm 0.5mm;
+    display:flex;flex-direction:column;justify-content:center;
+  }
+  .dasha .dh:first-child{border-left:0.45mm solid var(--ink);}
+  .dasha .dh .snd{display:block;text-align:right;font-size:10.5pt;line-height:1.2;}
+  .dasha .dh.c{text-align:center;}
+
+  /* body row: the two closed boxes float left; the results text wraps beside them,
+     then continues across the full width once it passes their bottom line */
+  .dasha .body{grid-column:1 / -1;position:relative;max-height:176mm;overflow:clip;}  /* stops above the fixed గోచార heading; clip = never scrolls */
+  .dasha .body::before{             /* right-hand line of the open column, same height as the boxes */
+    content:'';position:absolute;top:0;right:0;height:107mm;
+    border-right:0.45mm solid var(--ink);
+  }
+  .dasha .closed{
+    float:left;width:52%;height:107mm;margin:0 3mm 2.5mm 0;
+    display:grid;grid-template-columns:50% 50%;
+  }
+  .dasha .db{height:107mm;border-right:0.45mm solid var(--ink);border-bottom:0.45mm solid var(--ink);}
+  .dasha .db.first{border-left:0.45mm solid var(--ink);}
+  .dasha .db textarea{height:100%;}
+  .dasha .open{
+    min-height:107mm;
+    padding:4mm 3mm;
+    font:inherit;font-family:var(--te);font-size:11pt;line-height:7.5mm;
+    color:var(--pen);
+    outline:0;
+    overflow-wrap:anywhere;
+  }
+  /* each paragraph is a block; its lines sit beside the boxes first and then
+     wrap across the full page width once they pass the boxes' bottom line */
+  .dasha .open > div{min-height:7.5mm;}
+  .dasha .open:focus{background:#fffbe8;}
+  .dasha .body::after{content:'';display:block;clear:both;}
+  .dasha textarea{
+    padding:4mm 3mm;
+    font-size:11pt;
+    line-height:7.5mm;
+  }
+  /* ruled writing lines (green, inset from the cell edges, one per text line) */
+  .dasha .ruled textarea{
+    padding:4mm 5mm;
+    background-image:linear-gradient(to top, var(--ink) 0.3mm, transparent 0.3mm);
+    background-size:100% 7.5mm;
+    background-repeat:repeat-y;
+    background-origin:content-box;
+    background-clip:content-box;
+  }
+
+  /* గోచార section is pinned to the page, so it never moves when the results text grows */
+  .gochara{
+    position:absolute;left:107mm;top:200mm;margin:0;
+    font-size:12.5pt;
+    font-weight:600;
+    white-space:nowrap;
+  }
+  .gochara u{text-decoration:underline;text-underline-offset:1.2mm;text-decoration-thickness:0.35mm;}
+  .gochara .en{font-family:var(--ar);font-weight:700;font-size:12pt;margin-left:1mm;}
+  .gochara-box{position:absolute;left:7mm;right:7mm;top:209mm;bottom:9mm;}
+  .gochara-box textarea{height:100%;padding:3mm 4mm;font-size:11pt;line-height:7mm;}
+
+  .footer{
+    position:absolute;left:0;right:0;bottom:0;
+    padding:1.2mm 0 2mm;
+    border-top:0.35mm solid var(--ink);
+    text-align:center;
+    font-size:12pt;
+    font-weight:500;
+  }
+
+  /* ---------- toolbar ---------- */
+  .toolbar{
+    position:fixed;top:10px;right:10px;z-index:10;display:flex;gap:6px;
+  }
+  .toolbar button{
+    font-family:var(--ar);font-size:14px;font-weight:600;
+    background:var(--ink);color:#fff;border:0;border-radius:6px;
+    padding:9px 14px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3);
+  }
+  .toolbar button.alt{background:#555;}
+
+  /* ---------- quick-fill panel (screen only) ---------- */
+  .phrases{
+    position:fixed;top:60px;right:10px;z-index:9;
+    width:290px;max-height:calc(100vh - 80px);
+    background:#fff;border:1px solid #bfc9c2;border-radius:8px;
+    box-shadow:0 2px 10px rgba(0,0,0,.2);
+    display:flex;flex-direction:column;overflow:hidden;
+    font-family:var(--ar);
+  }
+  .ph-head{padding:8px 10px 8px;border-bottom:1px solid #d5dcd7;background:#f3f7f4;}
+  .ph-title{font:700 15px var(--te);color:var(--ink-dark);}
+  .ph-title small{font:600 11px var(--ar);color:#6a7a6f;margin-left:4px;}
+  .ph-target{font:12px var(--te);color:#444;margin-top:5px;line-height:1.35;}
+  .ph-target b{color:var(--pen);font-weight:600;}
+  .ph-target.flash b{background:#fff3b0;}
+  .ph-search{
+    width:100%;margin-top:7px;padding:6px 8px;border:1px solid #c6d0c9;border-radius:6px;
+    font:13px var(--te);outline:0;
+  }
+  .ph-search:focus{border-color:var(--ink);}
+  .ph-groups{overflow:auto;padding:4px 6px 8px;}
+  .ph-groups details{border-bottom:1px solid #eef1ef;}
+  .ph-groups details[hidden]{display:none;}
+  .ph-groups summary{
+    list-style:none;cursor:pointer;user-select:none;
+    display:flex;align-items:center;gap:6px;
+    padding:8px 6px;font:600 13.5px var(--te);color:var(--ink-dark);
+  }
+  .ph-groups summary::-webkit-details-marker{display:none;}
+  .ph-groups summary::before{
+    content:'';width:0;height:0;flex:0 0 auto;
+    border-left:7px solid var(--ink);border-top:5px solid transparent;border-bottom:5px solid transparent;
+    transition:transform .15s;
+  }
+  .ph-groups details[open] > summary::before{transform:rotate(90deg);}
+  .ph-groups summary:hover{background:#f1f7f3;border-radius:5px;}
+  .ph-groups summary .n{margin-left:auto;font:11px var(--ar);color:#7a8a7f;background:#eef3ef;padding:1px 6px;border-radius:9px;}
+  .ph-groups summary .en{font:600 11px var(--ar);color:#6a7a6f;}
+  .ph-groups .where{font:11px var(--te);color:#6b6b6b;padding:0 6px 6px 19px;line-height:1.3;}
+  .ph-groups ul{list-style:none;margin:0;padding:0 0 8px;}
+  .ph-groups li{
+    font-family:var(--te);font-size:13px;line-height:1.35;color:#222;
+    padding:5px 8px;margin:2px 0;border-radius:5px;cursor:pointer;
+    border:1px solid transparent;
+  }
+  .ph-groups li:hover{background:#eaf6ee;border-color:#bfe3cc;}
+  .ph-groups li.en{font-family:var(--ar);}
+  .ph-groups li[hidden]{display:none;}
+  .ph-groups ul.chips{display:flex;flex-wrap:wrap;gap:4px;padding:0 4px 8px;}
+  .ph-groups ul.chips li{
+    margin:0;padding:4px 9px;border:1px solid #cfe3d6;background:#f6faf7;border-radius:14px;
+    font-size:12.5px;white-space:nowrap;
+  }
+  .ph-groups ul.chips li:hover{background:#dff2e6;border-color:var(--ink);}
+  .ph-groups ul.chips li.sep{flex-basis:100%;background:none;border:0;padding:4px 2px 0;
+    font:600 11px var(--te);color:#6b6b6b;cursor:default;}
+  @media (max-width:1200px){ .phrases{display:none;} }
+
+  /* ---------- print ---------- */
+  @page{size:A4;margin:0;}
+  @media print{
+    :root{--s:1;}
+    body{background:#fff;padding:0;}
+    .toolbar{display:none;}
+    .phrases{display:none;}
+    .page-wrap{margin:0;width:210mm;height:297mm;}
+    .sheet{box-shadow:none;transform:none;page-break-after:always;break-after:page;}
+    .page-wrap:last-child .sheet{page-break-after:auto;break-after:auto;}
+    input.fill,textarea.fill{color:var(--pen);}
+    input.fill:focus,textarea.fill:focus,.dasha .open:focus{background:transparent;}
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button class="alt" type="button" onclick="clearAll()">Clear</button>
+  <button type="button" onclick="window.print()">Print / Save as PDF</button>
+</div>
+
+<!-- ================= PAGE 1 ================= -->
+<div class="page-wrap">
+<section class="sheet page1">
+
+  <h1 class="title">SRI DURGA VASTU, ASTROLOGY &amp; PALMISTRY</h1>
+
+  <div class="header">
+    <div class="astro">
+      <div>Astrologer : <span class="name">Krishna Balaram Veeravalli</span></div>
+      <div>Jyothishya Visharada</div>
+    </div>
+    <img class="logo" src="logo.png" alt="Sri Durga Devi on lion">
+    <div class="addr">
+      Rajiv Nagar Colony,<br>
+      K. Samudrapu Gattu,<br>
+      Attili, West Godavari Dist. A.P.<br>
+      Cell : 9000031119
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <div class="row ref-row">
+    <div class="row" style="width:auto"><span class="lbl ref">Ref :</span><input class="fill refin" type="text" aria-label="Ref"></div>
+    <div class="row" style="width:auto"><span class="lbl date">Date :</span><input class="fill datein" type="text" aria-label="Date"></div>
+  </div>
+
+  <div class="row dob-row">
+    <span class="lbl">D.O.B</span><input class="fill in1" type="text" aria-label="Date of birth">
+    <span class="lbl">T.O.B</span><input class="fill in2" type="text" aria-label="Time of birth">
+    <span class="lbl">P.O.B</span><input class="fill in3" type="text" aria-label="Place of birth">
+    <span class="lbl">Delivery</span><span class="lbl opt">Normal / Operation</span>
+  </div>
+
+  <div class="bless">
+    <span>శ్రీరస్తు</span>
+    <span>శుభమస్తు</span>
+    <span>దీర్ఘాయురస్తు</span>
+  </div>
+
+  <div class="para">
+    <div class="row">
+      <span class="lbl">స్వస్తిశ్రీ చాంద్రమాన</span><input class="fill g1" type="text" aria-label="సంవత్సరం పేరు">
+      <span class="lbl">నామ సంవత్సర</span><input class="fill g2" type="text" aria-label="మాసం">
+      <span class="lbl">మాస శు॥/బ॥</span><input class="fill g2" type="text" aria-label="పక్షం - తిథి - వారం">
+      <span class="lbl">వారం</span>
+    </div>
+    <div class="row">
+      <span class="lbl">అనగా తే</span><input class="fill g2" type="text" aria-label="తేది">
+      <span class="lbl">తేది ఉదయం / పగలు / సాయంత్రం / రాత్రి</span><input class="fill g3" type="text" aria-label="గంటలు (గం)">
+      <span class="lbl">గం</span><input class="fill g3" type="text" style="flex:0.6 1 0" aria-label="నిమిషాలు (ని॥)">
+      <span class="lbl">ని॥లకు</span><input class="fill g2" type="text" aria-label="నక్షత్రం (నక్షత్రయుక్త)">
+      <span class="lbl">నక్షత్రయుక్త</span>
+    </div>
+    <div class="row">
+      <input class="fill g2" type="text" aria-label="లగ్నం (లగ్నమందు)">
+      <span class="lbl">లగ్నమందు &nbsp;చి॥శ్రీ॥శ్రీమతి॥కుమారి॥</span><input class="fill g4" type="text" aria-label="పేరు">
+      <span class="lbl">శుభజననం.</span>
+    </div>
+  </div>
+
+  <div class="mangalam">
+    మంగళం మహత్
+    <b>శ్రీ శ్రీ శ్రీ శ్రీ శ్రీ</b>
+  </div>
+
+  <div class="charts">
+    <!-- రాశి chart -->
+    <svg class="chart" viewBox="0 0 250 200" xmlns="http://www.w3.org/2000/svg" aria-label="Rasi chart">
+      <g fill="none" stroke="#1f9a4d" stroke-width="2.2" stroke-linecap="square">
+        <rect x="2" y="2" width="246" height="196"/>
+        <line x1="2" y1="76" x2="248" y2="76"/>
+        <line x1="2" y1="124" x2="248" y2="124"/>
+        <line x1="95" y1="2" x2="95" y2="76"/>
+        <line x1="155" y1="2" x2="155" y2="76"/>
+        <line x1="95" y1="124" x2="95" y2="198"/>
+        <line x1="155" y1="124" x2="155" y2="198"/>
+        <line x1="2" y1="2" x2="95" y2="76"/>
+        <line x1="248" y1="2" x2="155" y2="76"/>
+        <line x1="2" y1="198" x2="95" y2="124"/>
+        <line x1="248" y1="198" x2="155" y2="124"/>
+      </g>
+      <ellipse cx="125" cy="100" rx="116" ry="93" fill="none" stroke="#7fcf9f" stroke-width="1.1"/>
+      <text x="125" y="107" text-anchor="middle" font-size="19" font-weight="600" fill="#1f9a4d" font-family="Noto Sans Telugu, Gautami, Nirmala UI, sans-serif">రాశి</text>
+    </svg>
+
+    <!-- అంశ chart -->
+    <svg class="chart" viewBox="0 0 250 200" xmlns="http://www.w3.org/2000/svg" aria-label="Amsa chart">
+      <g fill="none" stroke="#1f9a4d" stroke-width="2.2" stroke-linecap="square">
+        <rect x="2" y="2" width="246" height="196"/>
+        <line x1="2" y1="76" x2="248" y2="76"/>
+        <line x1="2" y1="124" x2="248" y2="124"/>
+        <line x1="95" y1="2" x2="95" y2="76"/>
+        <line x1="155" y1="2" x2="155" y2="76"/>
+        <line x1="95" y1="124" x2="95" y2="198"/>
+        <line x1="155" y1="124" x2="155" y2="198"/>
+        <line x1="2" y1="2" x2="95" y2="76"/>
+        <line x1="248" y1="2" x2="155" y2="76"/>
+        <line x1="2" y1="198" x2="95" y2="124"/>
+        <line x1="248" y1="198" x2="155" y2="124"/>
+      </g>
+      <ellipse cx="125" cy="100" rx="116" ry="93" fill="none" stroke="#7fcf9f" stroke-width="1.1"/>
+      <text x="125" y="107" text-anchor="middle" font-size="19" font-weight="600" fill="#1f9a4d" font-family="Noto Sans Telugu, Gautami, Nirmala UI, sans-serif">అంశ</text>
+    </svg>
+  </div>
+
+  <div class="sub-head">సం॥ - నెల - రో॥</div>
+
+  <div class="row birth-row">
+    <span class="lbl">జన్మ నక్షత్రం</span><input class="fill" type="text" style="flex:1.3 1 0" aria-label="జన్మ నక్షత్రం">
+    <span class="lbl">లగ్నం</span><input class="fill" type="text" style="flex:1.2 1 0" aria-label="లగ్నం">
+    <span class="lbl">జన్మ రాశి</span><input class="fill" type="text" style="flex:1 1 0" aria-label="జన్మ రాశి">
+    <span class="lbl">దశా శేషం :</span><input class="fill" type="text" style="flex:1.5 1 0" aria-label="దశా శేషం">
+  </div>
+
+  <p class="planet-head">జన్మ కాల గ్రహ సంపత్తి :</p>
+  <div class="planet-wrap">
+    <table class="planet">
+      <thead>
+        <tr>
+          <th>లగ్నం</th><th>రవి</th><th>చంద్ర</th><th>కుజ</th><th>బుధ</th>
+          <th>గురువు</th><th>శుక్ర</th><th>శని</th><th>రాహు</th><th>కేతు</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input class="fill" type="text"></td><td><input class="fill" type="text"></td>
+          <td><input class="fill" type="text"></td><td><input class="fill" type="text"></td>
+          <td><input class="fill" type="text"></td><td><input class="fill" type="text"></td>
+          <td><input class="fill" type="text"></td><td><input class="fill" type="text"></td>
+          <td><input class="fill" type="text"></td><td><input class="fill" type="text"></td>
+        </tr>
+        <tr>
+          <td><input class="fill" type="text"></td><td><input class="fill" type="text"></td>
+          <td><input class="fill" type="text"></td><td><input class="fill" type="text"></td>
+          <td><input class="fill" type="text"></td><td><input class="fill" type="text"></td>
+          <td><input class="fill" type="text"></td><td><input class="fill" type="text"></td>
+          <td><input class="fill" type="text"></td><td><input class="fill" type="text"></td>
+        </tr>
+        <tr>
+          <td><input class="fill" type="text"></td><td><input class="fill" type="text"></td>
+          <td><input class="fill" type="text"></td><td><input class="fill" type="text"></td>
+          <td><input class="fill" type="text"></td><td><input class="fill" type="text"></td>
+          <td><input class="fill" type="text"></td><td><input class="fill" type="text"></td>
+          <td><input class="fill" type="text"></td><td><input class="fill" type="text"></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="sub"><span>S</span><span>U</span><span>B</span></div>
+  </div>
+
+</section>
+</div>
+
+<!-- ================= PAGE 2 ================= -->
+<div class="page-wrap">
+<section class="sheet page2">
+
+  <div class="dasha">
+    <div class="dh">మహాదశాయాం<span class="snd">సం॥ - నెల - రో॥</span></div>
+    <div class="dh">ప్రస్తుత - అంతరములు<span class="snd">సం॥ - నెల - రో॥</span></div>
+    <div class="dh c">యోగములు - ఫలితములు</div>
+
+    <div class="body">
+      <div class="closed">
+        <div class="db first ruled"><textarea class="fill" aria-label="మహాదశాయాం"></textarea></div>
+        <div class="db ruled"><textarea class="fill" aria-label="ప్రస్తుత అంతరములు"></textarea></div>
+      </div>
+      <div class="open" contenteditable="true" aria-label="యోగములు - ఫలితములు" role="textbox" aria-multiline="true"></div>
+    </div>
+  </div>
+
+
+  <p class="gochara"><u>గోచార రీత్యా,</u><span class="en">bad periods ( Roughly)</span></p>
+  <div class="gochara-box">
+    <textarea class="fill" aria-label="గోచార రీత్యా (bad periods)"></textarea>
+  </div>
+
+  <div class="footer">జ్యోతిషం ఒక సూచనాపరమైన శాస్త్రం - జరుగునది దైవ సంకల్పము</div>
+
+</section>
+</div>
+
+<!-- ================= QUICK-FILL PANEL (screen only) ================= -->
+<aside class="phrases" aria-label="Quick fill">
+  <div class="ph-head">
+    <div class="ph-title">త్వరిత ఎంపికలు <small>Quick fill</small></div>
+    <div class="ph-target" id="ph-target">చేర్చు చోటు: <b>యోగములు - ఫలితములు</b></div>
+    <input class="ph-search" id="ph-search" type="search" placeholder="వెతుకు / search…" aria-label="Search quick fill">
+  </div>
+  <div class="ph-groups">
+    <details data-target="results">
+      <summary>యోగములు - ఫలితములు <span class="en">Telugu</span><span class="n">28</span></summary>
+      <div class="where">→ యోగములు - ఫలితములు గడిలో, వరుస వాక్యాలుగా చేరును.</div>
+      <ul class="rows">
+        <li>గజకేసరి యోగం కలదు - కీర్తి ప్రతిష్ఠలు లభించును.</li>
+        <li>రాజయోగం కలదు - అధికారం, గౌరవం లభించును.</li>
+        <li>ధన యోగం కలదు - ఆర్థికంగా అభివృద్ధి చెందుదురు.</li>
+        <li>విద్యా యోగం బాగున్నది - ఉన్నత విద్య అభ్యసింతురు.</li>
+        <li>ఉద్యోగ యోగం కలదు - ప్రభుత్వ ఉద్యోగ అవకాశం ఉన్నది.</li>
+        <li>వ్యాపార యోగం కలదు - స్వంత వ్యాపారంలో రాణింతురు.</li>
+        <li>వివాహ యోగం 25 - 28 సంవత్సరముల మధ్య కలదు.</li>
+        <li>సంతాన యోగం శుభప్రదంగా ఉన్నది.</li>
+        <li>విదేశీ యోగం కలదు - విదేశాలలో స్థిరపడుదురు.</li>
+        <li>గృహ యోగం, వాహన యోగం 30 సంవత్సరముల తరువాత కలదు.</li>
+        <li>దీర్ఘాయుష్షు కలదు.</li>
+        <li>కుజ దోషం లేదు.</li>
+        <li>కుజ దోషం కలదు - కుజ దోషం గల జాతకంతో వివాహం చేయవలెను.</li>
+        <li>కాలసర్ప దోషం కలదు - శాంతి పూజ చేయించవలెను.</li>
+        <li>ఏలినాటి శని నడుచుచున్నది - ఆరోగ్యం, ఆర్థిక విషయాలలో జాగ్రత్త.</li>
+        <li>ప్రస్తుతం గురు దశ నడుచుచున్నది - శుభ ఫలితాలు కలుగును.</li>
+        <li>రాహు దశలో అనారోగ్య సమస్యలు - జాగ్రత్త వహించవలెను.</li>
+        <li>శని దశలో కష్టములు - ఓర్పుతో ముందుకు సాగవలెను.</li>
+        <li>ఆరోగ్యం పట్ల శ్రద్ధ వహించవలెను.</li>
+        <li>ఈ సంవత్సరం శుభప్రదంగా ఉన్నది.</li>
+        <li>నవగ్రహ శాంతి చేయించవలెను.</li>
+        <li>శని దేవునికి తైలాభిషేకం చేయవలెను.</li>
+        <li>హనుమాన్ చాలీసా ప్రతిరోజు పారాయణం చేయవలెను.</li>
+        <li>శ్రీ దుర్గా దేవిని శుక్రవారం ఆరాధించుట శుభప్రదం.</li>
+        <li>లలితా సహస్రనామ పారాయణం చేయవలెను.</li>
+        <li>సుబ్రహ్మణ్య స్వామి ఆరాధన చేయవలెను.</li>
+        <li>మంగళవారం కుజ దోష నివారణ పూజ చేయించవలెను.</li>
+        <li>దానధర్మములు చేయుట వలన దోష నివారణ జరుగును.</li>
+      </ul>
+    </details>
+    <details data-target="results">
+      <summary>Yoga - Results <span class="en">English</span><span class="n">28</span></summary>
+      <div class="where">→ Goes into the యోగములు - ఫలితములు area as running text.</div>
+      <ul class="rows">
+        <li class="en">Gajakesari Yoga is present - fame and prosperity.</li>
+        <li class="en">Raja Yoga is present - authority, respect and success.</li>
+        <li class="en">Dhana Yoga is present - good financial growth.</li>
+        <li class="en">Good education yoga - will pursue higher studies.</li>
+        <li class="en">Job yoga is present - chance of government job.</li>
+        <li class="en">Business yoga is present - success in own business.</li>
+        <li class="en">Marriage yoga between 25 - 28 years of age.</li>
+        <li class="en">Santhana (children) yoga is favourable.</li>
+        <li class="en">Foreign yoga is present - may settle abroad.</li>
+        <li class="en">Own house and vehicle after 30 years of age.</li>
+        <li class="en">Long life is indicated.</li>
+        <li class="en">No Kuja (Mangal) dosha.</li>
+        <li class="en">Kuja dosha is present - match with a Kuja dosha horoscope.</li>
+        <li class="en">Kala Sarpa dosha is present - perform shanti pooja.</li>
+        <li class="en">Sade Sati (Elinati Shani) is running - take care of health and finance.</li>
+        <li class="en">Currently Guru dasha is running - favourable results.</li>
+        <li class="en">Rahu dasha - take care of health.</li>
+        <li class="en">Shani dasha - difficulties, proceed with patience.</li>
+        <li class="en">Take care of health.</li>
+        <li class="en">This year is auspicious.</li>
+        <li class="en">Perform Navagraha shanti.</li>
+        <li class="en">Offer oil abhishekam to Lord Shani.</li>
+        <li class="en">Recite Hanuman Chalisa daily.</li>
+        <li class="en">Worship Sri Durga Devi on Fridays.</li>
+        <li class="en">Recite Lalitha Sahasranamam.</li>
+        <li class="en">Worship Lord Subrahmanya Swamy.</li>
+        <li class="en">Perform Kuja dosha nivarana pooja on Tuesdays.</li>
+        <li class="en">Charity and donations will reduce doshas.</li>
+      </ul>
+    </details>
+    <details data-target="maha">
+      <summary>మహాదశ <span class="en">Mahadasha</span><span class="n">12</span></summary>
+      <div class="where">→ మహాదశాయాం గడిలో ఒక్కో గీతకు ఒకటి. పేరు తరువాత సం॥-నెల-రో॥ టైప్ చేయండి.</div>
+      <ul class="rows">
+        <li data-v="కేతు దశ - ">కేతు దశ (7 సం॥)</li>
+        <li data-v="శుక్ర దశ - ">శుక్ర దశ (20 సం॥)</li>
+        <li data-v="రవి దశ - ">రవి దశ (6 సం॥)</li>
+        <li data-v="చంద్ర దశ - ">చంద్ర దశ (10 సం॥)</li>
+        <li data-v="కుజ దశ - ">కుజ దశ (7 సం॥)</li>
+        <li data-v="రాహు దశ - ">రాహు దశ (18 సం॥)</li>
+        <li data-v="గురు దశ - ">గురు దశ (16 సం॥)</li>
+        <li data-v="శని దశ - ">శని దశ (19 సం॥)</li>
+        <li data-v="బుధ దశ - ">బుధ దశ (17 సం॥)</li>
+        <li data-v="ప్రస్తుతం ">ప్రస్తుతం ... దశ</li>
+        <li data-v="దశ శేషం - ">దశ శేషం</li>
+        <li data-v="దశ ప్రారంభం - ">దశ ప్రారంభం</li>
+      </ul>
+    </details>
+    <details data-target="antar">
+      <summary>అంతర్దశలు <span class="en">Antardasha</span><span class="n">10</span></summary>
+      <div class="where">→ ప్రస్తుత అంతరములు గడిలో ఒక్కో గీతకు ఒకటి.</div>
+      <ul class="rows">
+        <li data-v="కేతు - ">కేతు అంతరం</li>
+        <li data-v="శుక్ర - ">శుక్ర అంతరం</li>
+        <li data-v="రవి - ">రవి అంతరం</li>
+        <li data-v="చంద్ర - ">చంద్ర అంతరం</li>
+        <li data-v="కుజ - ">కుజ అంతరం</li>
+        <li data-v="రాహు - ">రాహు అంతరం</li>
+        <li data-v="గురు - ">గురు అంతరం</li>
+        <li data-v="శని - ">శని అంతరం</li>
+        <li data-v="బుధ - ">బుధ అంతరం</li>
+        <li data-v=" నుండి  వరకు">... నుండి ... వరకు</li>
+      </ul>
+    </details>
+    <details data-target="gochara">
+      <summary>గోచారం <span class="en">Gochara / bad periods</span><span class="n">24</span></summary>
+      <div class="where">→ గోచార రీత్యా గడిలో ఒక్కో గీతకు ఒకటి.</div>
+      <ul class="rows">
+        <li>ఏలినాటి శని నడుచుచున్నది - జాగ్రత్త వహించవలెను.</li>
+        <li>అష్టమ శని - కష్ట కాలం, ఆరోగ్యం పట్ల జాగ్రత్త.</li>
+        <li>అర్ధాష్టమ శని - కొన్ని ఇబ్బందులు కలుగును.</li>
+        <li>కంటక శని - ఉద్యోగ, వ్యాపార విషయాలలో జాగ్రత్త.</li>
+        <li>గురు గోచారం అనుకూలం - శుభ ఫలితాలు కలుగును.</li>
+        <li>రాహు గోచారం ప్రతికూలం - అనారోగ్యం, మానసిక ఆందోళన.</li>
+        <li>కేతు గోచారం - ఆకస్మిక ఖర్చులు, జాగ్రత్త.</li>
+        <li>కుజ గోచారం - ప్రమాదాలు, కోపం పట్ల జాగ్రత్త.</li>
+        <li>ఈ సంవత్సరం గోచారం అనుకూలంగా ఉన్నది.</li>
+        <li>ఈ సంవత్సరం గోచారం ప్రతికూలం - జాగ్రత్త.</li>
+        <li>2026 నుండి 2028 వరకు జాగ్రత్త.</li>
+        <li>శని శాంతి, నవగ్రహ శాంతి చేయించవలెను.</li>
+        <li class="en">Sade Sati (Elinati Shani) is running - be careful.</li>
+        <li class="en">Ashtama Shani - difficult period, take care of health.</li>
+        <li class="en">Ardhashtama Shani - some troubles.</li>
+        <li class="en">Kantaka Shani - care in job and business matters.</li>
+        <li class="en">Guru transit is favourable - good results.</li>
+        <li class="en">Rahu transit is unfavourable - health, mental stress.</li>
+        <li class="en">Ketu transit - sudden expenses, be careful.</li>
+        <li class="en">Kuja transit - accidents, control anger.</li>
+        <li class="en">This year&#x27;s transit is favourable.</li>
+        <li class="en">This year&#x27;s transit is unfavourable - be careful.</li>
+        <li class="en">Be careful from 2026 to 2028.</li>
+        <li class="en">Perform Shani shanti and Navagraha shanti.</li>
+      </ul>
+    </details>
+    <details data-target="field" data-default="జన్మ రాశి" data-allow="జన్మ రాశి|లగ్నం|గ్రహ సంపత్తి">
+      <summary>రాశులు <span class="en">Rasi (12)</span><span class="n">12</span></summary>
+      <div class="where">→ జన్మ రాశి గడిలోకి. లగ్నం లేదా గ్రహ సంపత్తి గడిని క్లిక్ చేసి ఉంటే అందులోకి.</div>
+      <ul class="chips">
+        <li>మేషం</li>
+        <li>వృషభం</li>
+        <li>మిథునం</li>
+        <li>కర్కాటకం</li>
+        <li>సింహం</li>
+        <li>కన్య</li>
+        <li>తుల</li>
+        <li>వృశ్చికం</li>
+        <li>ధనస్సు</li>
+        <li>మకరం</li>
+        <li>కుంభం</li>
+        <li>మీనం</li>
+      </ul>
+    </details>
+    <details data-target="field" data-default="జన్మ నక్షత్రం" data-allow="జన్మ నక్షత్రం|నక్షత్రం|గ్రహ సంపత్తి">
+      <summary>నక్షత్రములు <span class="en">Nakshatra (27)</span><span class="n">27</span></summary>
+      <div class="where">→ జన్మ నక్షత్రం గడిలోకి. నక్షత్రయుక్త లేదా గ్రహ సంపత్తి గడిని క్లిక్ చేసి ఉంటే అందులోకి.</div>
+      <ul class="chips">
+        <li>అశ్విని</li>
+        <li>భరణి</li>
+        <li>కృత్తిక</li>
+        <li>రోహిణి</li>
+        <li>మృగశిర</li>
+        <li>ఆర్ద్ర</li>
+        <li>పునర్వసు</li>
+        <li>పుష్యమి</li>
+        <li>ఆశ్లేష</li>
+        <li>మఖ</li>
+        <li>పుబ్బ</li>
+        <li>ఉత్తర</li>
+        <li>హస్త</li>
+        <li>చిత్త</li>
+        <li>స్వాతి</li>
+        <li>విశాఖ</li>
+        <li>అనూరాధ</li>
+        <li>జ్యేష్ఠ</li>
+        <li>మూల</li>
+        <li>పూర్వాషాఢ</li>
+        <li>ఉత్తరాషాఢ</li>
+        <li>శ్రవణం</li>
+        <li>ధనిష్ఠ</li>
+        <li>శతభిషం</li>
+        <li>పూర్వాభాద్ర</li>
+        <li>ఉత్తరాభాద్ర</li>
+        <li>రేవతి</li>
+      </ul>
+    </details>
+    <details data-target="field" data-default="దశా శేషం" data-allow="దశా శేషం|గ్రహ సంపత్తి|మహాదశాయాం|ప్రస్తుత అంతరములు|యోగములు - ఫలితములు">
+      <summary>గ్రహములు <span class="en">Planets</span><span class="n">9</span></summary>
+      <div class="where">→ దశా శేషం గడిలోకి. గ్రహ సంపత్తి / దశ గడులను క్లిక్ చేసి ఉంటే అందులోకి.</div>
+      <ul class="chips">
+        <li>రవి</li>
+        <li>చంద్ర</li>
+        <li>కుజ</li>
+        <li>బుధ</li>
+        <li>గురు</li>
+        <li>శుక్ర</li>
+        <li>శని</li>
+        <li>రాహు</li>
+        <li>కేతు</li>
+      </ul>
+    </details>
+    <details data-target="field" data-default="సంవత్సరం పేరు" data-allow="సంవత్సరం పేరు">
+      <summary>సంవత్సరములు <span class="en">60 years</span><span class="n">60</span></summary>
+      <div class="where">→ చాంద్రమాన సంవత్సరం పేరు గడిలోకి.</div>
+      <ul class="chips">
+        <li>ప్రభవ</li>
+        <li>విభవ</li>
+        <li>శుక్ల</li>
+        <li>ప్రమోదూత</li>
+        <li>ప్రజోత్పత్తి</li>
+        <li>ఆంగీరస</li>
+        <li>శ్రీముఖ</li>
+        <li>భావ</li>
+        <li>యువ</li>
+        <li>ధాత</li>
+        <li>ఈశ్వర</li>
+        <li>బహుధాన్య</li>
+        <li>ప్రమాది</li>
+        <li>విక్రమ</li>
+        <li>వృష</li>
+        <li>చిత్రభాను</li>
+        <li>స్వభాను</li>
+        <li>తారణ</li>
+        <li>పార్థివ</li>
+        <li>వ్యయ</li>
+        <li>సర్వజిత్</li>
+        <li>సర్వధారి</li>
+        <li>విరోధి</li>
+        <li>వికృతి</li>
+        <li>ఖర</li>
+        <li>నందన</li>
+        <li>విజయ</li>
+        <li>జయ</li>
+        <li>మన్మథ</li>
+        <li>దుర్ముఖి</li>
+        <li>హేవిళంబి</li>
+        <li>విళంబి</li>
+        <li>వికారి</li>
+        <li>శార్వరి</li>
+        <li>ప్లవ</li>
+        <li>శుభకృత్</li>
+        <li>శోభకృత్</li>
+        <li>క్రోధి</li>
+        <li>విశ్వావసు</li>
+        <li>పరాభవ</li>
+        <li>ప్లవంగ</li>
+        <li>కీలక</li>
+        <li>సౌమ్య</li>
+        <li>సాధారణ</li>
+        <li>విరోధికృత్</li>
+        <li>పరీధావి</li>
+        <li>ప్రమాదీచ</li>
+        <li>ఆనంద</li>
+        <li>రాక్షస</li>
+        <li>నల</li>
+        <li>పింగళ</li>
+        <li>కాళయుక్తి</li>
+        <li>సిద్ధార్థి</li>
+        <li>రౌద్రి</li>
+        <li>దుర్మతి</li>
+        <li>దుందుభి</li>
+        <li>రుధిరోద్గారి</li>
+        <li>రక్తాక్షి</li>
+        <li>క్రోధన</li>
+        <li>అక్షయ</li>
+      </ul>
+    </details>
+    <details data-target="field" data-default="మాసం" data-allow="మాసం">
+      <summary>మాసములు <span class="en">Months</span><span class="n">12</span></summary>
+      <div class="where">→ మాసం గడిలోకి.</div>
+      <ul class="chips">
+        <li>చైత్ర</li>
+        <li>వైశాఖ</li>
+        <li>జ్యేష్ఠ</li>
+        <li>ఆషాఢ</li>
+        <li>శ్రావణ</li>
+        <li>భాద్రపద</li>
+        <li>ఆశ్వయుజ</li>
+        <li>కార్తీక</li>
+        <li>మార్గశిర</li>
+        <li>పుష్య</li>
+        <li>మాఘ</li>
+        <li>ఫాల్గుణ</li>
+      </ul>
+    </details>
+    <details data-target="field" data-append="1" data-default="పక్షం - తిథి - వారం" data-allow="పక్షం - తిథి - వారం">
+      <summary>పక్షం - తిథి - వారం <span class="en">Paksha / Tithi / Day</span><span class="n">25</span></summary>
+      <div class="where">→ శు॥/బ॥ గడిలోకి. ఒకటి తరువాత ఒకటి క్లిక్ చేస్తే పక్కపక్కన చేరును.</div>
+      <ul class="chips">
+        <li class="sep">పక్షం</li>
+        <li>శుక్ల</li>
+        <li>బహుళ</li>
+        <li class="sep">తిథి</li>
+        <li>పాడ్యమి</li>
+        <li>విదియ</li>
+        <li>తదియ</li>
+        <li>చవితి</li>
+        <li>పంచమి</li>
+        <li>షష్ఠి</li>
+        <li>సప్తమి</li>
+        <li>అష్టమి</li>
+        <li>నవమి</li>
+        <li>దశమి</li>
+        <li>ఏకాదశి</li>
+        <li>ద్వాదశి</li>
+        <li>త్రయోదశి</li>
+        <li>చతుర్దశి</li>
+        <li>పూర్ణిమ</li>
+        <li>అమావాస్య</li>
+        <li class="sep">వారం</li>
+        <li>ఆదివారం</li>
+        <li>సోమవారం</li>
+        <li>మంగళవారం</li>
+        <li>బుధవారం</li>
+        <li>గురువారం</li>
+        <li>శుక్రవారం</li>
+        <li>శనివారం</li>
+      </ul>
+    </details>
+  </div>
+</aside>
+
+<script>
+  // Scale the fixed A4 sheets down to fit narrow screens (layout stays identical).
+  function fitSheets(){
+    var mm = 3.7795275591;                    // css px per mm
+    var sheetPx = 210 * mm;
+    var avail = document.documentElement.clientWidth - 16;
+    var s = Math.min(1, avail / sheetPx);
+    document.documentElement.style.setProperty('--s', s.toFixed(4));
+  }
+  window.addEventListener('resize', fitSheets);
+  window.addEventListener('beforeprint', function(){document.documentElement.style.setProperty('--s', 1);});
+  window.addEventListener('afterprint', fitSheets);
+  fitSheets();
+
+  function clearAll(){
+    if(!confirm('Clear all entered details?')) return;
+    document.querySelectorAll('input.fill, textarea.fill').forEach(function(el){ el.value=''; });
+    yogBox.innerHTML = '';
+  }
+
+  // The యోగములు area is an editable block (not a textarea) so the text can sit beside the
+  // two closed boxes and continue across the full width below them. Every line is a <div>.
+  var yogBox = document.querySelector('.dasha .open');
+
+  function newLine(text){
+    var d = document.createElement('div');
+    if(text){ d.textContent = text; } else { d.appendChild(document.createElement('br')); }
+    return d;
+  }
+  // Keep the content as a flat list of <div> lines (wrap stray text / <br> / nested blocks).
+  function normalizeLines(){
+    var kids = Array.prototype.slice.call(yogBox.childNodes);
+    kids.forEach(function(n){
+      if(n.nodeType === 3){
+        if(!n.nodeValue.trim()){ yogBox.removeChild(n); return; }
+        var d = document.createElement('div'); yogBox.replaceChild(d, n); d.appendChild(n);
+      }else if(n.nodeType === 1 && n.tagName !== 'DIV'){
+        if(n.tagName === 'BR'){ yogBox.removeChild(n); return; }
+        var d2 = document.createElement('div'); yogBox.replaceChild(d2, n); d2.appendChild(n);
+      }
+    });
+    Array.prototype.slice.call(yogBox.querySelectorAll('div')).forEach(function(d){
+      if(d.parentNode !== yogBox){                       // nested block -> flatten
+        var outer = d.parentNode; while(outer.parentNode !== yogBox) outer = outer.parentNode;
+        yogBox.insertBefore(d, outer.nextSibling);
+      }
+      if(!d.textContent && !d.querySelector('br')) d.appendChild(document.createElement('br'));
+    });
+  }
+  function placeCaretAtEnd(el){
+    var r = document.createRange(); r.selectNodeContents(el); r.collapse(false);
+    var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+  }
+  function currentLine(){
+    var sel = window.getSelection();
+    if(!sel.rangeCount) return null;
+    var n = sel.getRangeAt(0).startContainer;
+    if(!yogBox.contains(n) || n === yogBox) return null;
+    while(n.parentNode !== yogBox) n = n.parentNode;
+    return n.nodeType === 1 ? n : null;
+  }
+  // Insert text at the caret as running text (joined with a space), so the lines fill the
+  // full width before wrapping. Press Enter to start a new paragraph when wanted.
+  function insertInline(text){
+    normalizeLines();
+    var cur = currentLine();
+    if(!cur){ cur = yogBox.lastElementChild || yogBox.appendChild(newLine('')); }
+    var sel = window.getSelection(), rng;
+    if(sel.rangeCount && cur.contains(sel.getRangeAt(0).startContainer)){ rng = sel.getRangeAt(0); }
+    else{ rng = document.createRange(); rng.selectNodeContents(cur); rng.collapse(false); }
+    var pre = rng.cloneRange(); pre.selectNodeContents(cur); pre.setEnd(rng.startContainer, rng.startOffset);
+    var post = rng.cloneRange(); post.selectNodeContents(cur); post.setStart(rng.endContainer, rng.endOffset);
+    var before = pre.toString(), after = post.toString();
+    var out = text;
+    if(before.length && !/\s$/.test(before)) out = ' ' + out;
+    if(after.length && !/^\s/.test(after)) out = out + ' ';
+    rng.deleteContents();
+    rng.insertNode(document.createTextNode(out));
+    var br = cur.querySelector('br'); if(br) br.parentNode.removeChild(br);
+    cur.normalize();
+    var caret = (before + out).length, node = cur.firstChild;
+    while(node && caret > node.length){ caret -= node.length; node = node.nextSibling; }
+    var r2 = document.createRange();
+    if(node){ r2.setStart(node, caret); } else { r2.selectNodeContents(cur); r2.collapse(false); }
+    r2.collapse(true); sel.removeAllRanges(); sel.addRange(r2);
+  }
+  yogBox.addEventListener('focus', function(){
+    if(!yogBox.childNodes.length){ yogBox.appendChild(newLine('')); placeCaretAtEnd(yogBox.firstChild); }
+  });
+  yogBox.addEventListener('input', normalizeLines);
+  yogBox.addEventListener('paste', function(e){      // plain text only, one block per line
+    e.preventDefault();
+    var txt = (e.clipboardData || window.clipboardData).getData('text/plain') || '';
+    txt = txt.replace(/\s*\n\s*/g, ' ').trim();
+    if(txt) insertInline(txt);
+  });
+
+  // ---------- quick-fill panel ----------
+  // label the planet-table cells so the panel can name them
+  (function(){
+    var heads = Array.prototype.map.call(document.querySelectorAll('.planet thead th'), function(th){ return th.textContent.trim(); });
+    document.querySelectorAll('.planet tbody tr').forEach(function(tr, r){
+      tr.querySelectorAll('input').forEach(function(inp, c){ inp.setAttribute('aria-label', 'గ్రహ సంపత్తి - ' + heads[c] + ' (వరుస ' + (r+1) + ')'); });
+    });
+  })();
+
+  var targetEl = document.getElementById('ph-target');
+  var fixedTargets = {
+    results: yogBox,
+    maha:    document.querySelector('textarea[aria-label="మహాదశాయాం"]'),
+    antar:   document.querySelector('textarea[aria-label="ప్రస్తుత అంతరములు"]'),
+    gochara: document.querySelector('textarea[aria-label="గోచార రీత్యా (bad periods)"]')
+  };
+  var lastBox = yogBox;
+  function labelOf(el){ return el.getAttribute('aria-label') || 'గడి'; }
+  function showTarget(el){ targetEl.innerHTML = 'చేర్చు చోటు: <b></b>'; targetEl.querySelector('b').textContent = labelOf(el); }
+  document.querySelectorAll('input.fill, textarea.fill, .dasha .open').forEach(function(t){
+    t.addEventListener('focus', function(){ lastBox = t; showTarget(t); });
+  });
+
+  // one entry per ruled line in a textarea
+  function insertLineInto(box, text){
+    var v = box.value, a = box.selectionStart, b = box.selectionEnd;
+    if(a == null){ a = b = v.length; }
+    var before = v.slice(0,a), after = v.slice(b);
+    if(before.length && !/\n$/.test(before)) before += '\n';
+    if(after.length && !/^\n/.test(after)) after = '\n' + after;
+    box.value = before + text + after;
+    var pos = (before + text).length;
+    box.focus(); box.setSelectionRange(pos, pos);
+  }
+  // short values into a single-line field: replaces the value, or (append groups) adds after a space
+  function insertIntoInput(inp, text, append){
+    var v = inp.value.trim();
+    inp.value = (append && v) ? v + ' ' + text : text;
+    inp.focus();
+    try{ inp.setSelectionRange(inp.value.length, inp.value.length); }catch(e){}
+  }
+  function fieldFor(details){
+    // use the last-clicked field only if this group is meant for it; otherwise its home field
+    var allow = (details.dataset.allow || '').split('|');
+    var ok = lastBox && allow.some(function(a){ return labelOf(lastBox).indexOf(a) === 0; });
+    if(ok) return lastBox;
+    return document.querySelector('[aria-label="' + details.dataset['default'] + '"]') || lastBox;
+  }
+  function insertPhrase(target, text, details){
+    var box = fixedTargets[target] || (details && details.dataset['default'] ? fieldFor(details) : lastBox) || yogBox;
+    if(box === yogBox){ box.focus(); insertInline(text); return; }
+    if(box.tagName === 'TEXTAREA'){ insertLineInto(box, text); return; }
+    insertIntoInput(box, text, details && details.dataset.append === '1');
+  }
+  document.querySelectorAll('.ph-groups li').forEach(function(li){
+    if(li.classList.contains('sep')) return;
+    li.addEventListener('mousedown', function(e){ e.preventDefault(); });  // keep the field's focus
+    li.addEventListener('click', function(){
+      var text = li.dataset.v != null ? li.dataset.v : li.textContent.trim();
+      var d = li.closest('details');
+      insertPhrase(d.dataset.target, text, d);
+      targetEl.classList.remove('flash'); void targetEl.offsetWidth; targetEl.classList.add('flash');
+    });
+  });
+  // accordion: opening one group closes the others
+  var groups = document.querySelectorAll('.ph-groups details');
+  groups.forEach(function(d){
+    d.addEventListener('toggle', function(){
+      if(d.open && !searching) groups.forEach(function(o){ if(o !== d) o.open = false; });
+    });
+  });
+  // search across all groups
+  var searching = false;
+  document.getElementById('ph-search').addEventListener('input', function(){
+    var q = this.value.trim().toLowerCase();
+    searching = !!q;
+    groups.forEach(function(d){
+      var any = false;
+      d.querySelectorAll('li').forEach(function(li){
+        if(li.classList.contains('sep')){ li.hidden = !!q; return; }
+        var hit = !q || li.textContent.toLowerCase().indexOf(q) !== -1;
+        li.hidden = !hit; if(hit) any = true;
+      });
+      d.hidden = q && !any;
+      if(q) d.open = any;
+    });
+    if(!q){ groups.forEach(function(d){ d.open = false; }); }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+# never upload the scanned original or anything that is not part of the site
+*.pdf
+.vercel
